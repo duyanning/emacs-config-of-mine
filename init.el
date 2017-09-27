@@ -1049,6 +1049,7 @@
 
 ;; 要用这个东西还得先通过npm安装https://github.com/clausreinke/typescript-tools
 (defun configure-tss-mode ()
+	(when (add-package 'magit "~/non-exist")
   ;; 以下配置是从https://github.com/aki2o/emacs-tss 直接抄过来的
   ;; If use bundled typescript.el,
   (require 'typescript)
@@ -1092,6 +1093,8 @@
 
 
                ))
+
+	)
   
   )
 
