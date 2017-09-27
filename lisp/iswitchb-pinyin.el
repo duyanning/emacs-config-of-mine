@@ -20,7 +20,7 @@
 
 ;; pinyin-initials.txt中包含了20902个汉字的拼音首字母。这些字母是按对应
 ;; 汉字unicode码点的顺序排列的。包括了所有的“CJK统一汉字”。
-(defvar pinyin-initials-file "~/.emacs.d/lisp/pinyin-initials.txt") 
+(defvar pinyin-initials-file "~/emacs-config-of-mine/lisp/pinyin-initials.txt") 
 
 (defun iswitchb-pinyin-init ()
   (unless iswitchb-pinyin-initialized
