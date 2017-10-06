@@ -1110,7 +1110,9 @@
 
 
 (defun configure-ace-window ()
-  (global-set-key (kbd "C-x o") 'ace-window)
+  (when (add-package 'ace-window "~/non-exist")
+    (global-set-key (kbd "C-x o") 'ace-window)
+    )
   )
 
 
