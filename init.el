@@ -1103,7 +1103,9 @@
   (when (add-package 'ace-jump-mode ace-jump-mode-path)
     (require 'ace-jump-mode)
     ;; (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-    (define-key global-map (kbd "C-c j") 'ace-pinyin-dwim) ; 需安装ace-pinyin
+    (when (add-package 'ace-pinyin "~/non-exist")
+      (define-key global-map (kbd "C-c j") 'ace-pinyin-dwim) ; 需安装ace-pinyin
+      )
     )
   )
 
