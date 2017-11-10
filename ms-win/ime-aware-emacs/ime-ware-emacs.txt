@@ -1,0 +1,337 @@
+* 动机：怎样才能让输入法不要干扰emacs快捷键的使用？
+
+比如说，现在搜狗输入法处于开启状态。
+我按C-h k
+搜狗不会拦截C-h，但是却会拦截k，导致输入法窗口出现。
+以至于我每次都要先关闭输入法再输入C-h k。
+
+此项功能我已在womacs中实现。
+现在想给emacs也加上。
+
+* 思路
+利用windows API做了两个函数，分别用来关闭、开启输入法。
+
+让emacs在按下C-h等前缀键时调用我的输入法关闭函数，在C-h k，或者更长的按键序列结束之后调用我的输入法开启函数。
+
+原本以为在elisp中就能调用windows API函数，但后来得知GNU Emacs因为担心一些法律问题而一直没有提供FFI (foreign function interface)。
+（一些fork版本，如xemacs提供了FFI功能，但我不想用这些fork版本。）
+
+难怪ibus.el要通过python才能跟ibus输入法打交道。
+
+看来只有自己修改emacs源码，在.c中新增几个函数，然后在elisp中调用。
+
+* 修改emacs源码
+修改src/w32fns.c
+
+** 作废
+修改文件src/makefile.w32-in
+搜索到GDI32一行，在其下新增一行，写上
+$(IMM32)	\
+
+
+
+修改文件nt/gmake.defs
+搜索到GDI32一行，在其下新增一行，写上
+IMM32		= -limm32
+
+* 测试
+emacs -q
+
+在*scratch* buffer中输入，然后用C-x C-e执行
+(ime-restore-status)
+(ime-save-and-set-status 0)
+
+* 问题
+** ImmSetOpenStatus总是失败（返回false）
+可能是因为ImmSetOpenStatus向窗口发送了消息，而emacs正在忙着解释elisp字节码，没法处理消息。所以失败。
+这个问题最终参照日本人的补丁得到解决。
+** 第一次输入法不会消失
+这个问题在womacs中也存在。
+最后发现是搜狗输入法的问题，QQ拼音正常。
+
+* 路径
+C:\MinGW\msys\1.0\home\duyanning\work\emacs-23.3\nt
+C:\MinGW\msys\1.0\home\duyanning\work\emacs-23.3\src
+* 一些工具
+用xsearch搜索emacs源码中的函数名信息等。
+
+* 我自己的补丁用法
+~/work/emacs-23.3$ patch -p1 < ../emacs-23.3-smart-ime.patch
+详见
+http://www.newsmth.net/nForum/article/Emacs/98734
+
+* 用mingw编译
+为了在cmd.exe命令行中使用mingw的工具，需要设置好路径。测试一下，只要在cmd.exe的命令行下能调用到gcc就行。
+where gcc看一下，是否调用的是mingw下的。
+
+启动cmd.exe
+进入nt目录
+
+** 配置
+*** 如果不要图像支持
+执行
+configure.bat --with-gcc --no-debug --without-xpm --without-png --without-jpeg --without-tiff --without-gif
+*** 如果要图像支持
+
+从
+http://gnuwin32.sourceforge.net
+下载
+
+LibJpeg
+GifLib
+LibTiff
+Xpm，除了这个还需源码包
+LibPng
+
+安装这些包
+
+装好之后，还需手动微调
+将src\xpm\3.5.1\libXpm-3.5.1-src\lib\simx.h复制到include下
+
+
+然后执行
+configure.bat --with-gcc --no-debug --cflags -ID:/gnuwin32/include --cflags -IC:/gnuwin32/src/lib
+** 编译
+
+mingw32-make
+
+** 编译手册
+mingw32-make info
+*** 备注
+根据nt/INSTALL所说
+除非你是从仓库中的代码编译，否则是不用make info的。
+但是，我之前没有make info，结果发现手册看不了，提示如下：
+info file emacs does not exist
+所以还是得自己make
+
+** 安装
+mingw32-make install INSTALL_DIR=F:/myemacs
+
+*** 备注
+如果已经在某位置安装过一次，再安装之前必须删除原来安装的目录。
+否则很多东西装不进去。
+比如第一次装的时候没有编译手册，所以没装上手册。
+等你编译了手册再装之前，一定要先删除之前安装的目录。否则装了之后还是没有手册。
+
+** 安装动态库
+将D:\gnuwin32\bin下所有.dll文件复制到F:\myemacs\bin下
+
+我发现其实只要把xpm4.dll复制过去就可以了。
+把emacs官方二进制包中的libXpm.dll复制过去也行。
+我安装了gnuwin32之后，其中并没有libXpm.dll，只有一个xpm4.dll。
+
+
+如果找不到libXpm.dll或xpm4.dll，emacs的工具栏就是黑白的。
+
+** emacs.exe文件太大
+比如30MB以上，这是因为在configure时忘了加--no-debug
+** 金山毒霸说有木马
+添加信任即可
+
+** 参考资料
+
+http://www.emacswiki.org/emacs/BuildingCvsWThirtyTwoMingw
+
+http://ourcomments.org/Emacs/w32-build-emacs.html#imagesupport
+这个文档有些过时，人家emacs都停止更新cvs，文档中还cvs。
+
+* 日本人补丁研究
+发现了日本人写的一个ime补丁。
+地址： http://albinina.sakura.ne.jp/emacs-23.2-ime.patch
+其中通过w32_set_ime_status调用了ImmSetOpenStatusProc，后者持有ImmSetOpenStatus的地址。
+
+
+elisp函数不直接immsetopenstatus，而是发送消息。处理消息时才immsetopenstatus。
+
+#+begin_src c
+
+
+#define WM_MULE_IMM_MESSAGE_START             (WM_USER+2300)
+#define WM_MULE_IMM_SET_STATUS                (WM_USER+2300)
+#define WM_MULE_IMM_GET_STATUS                (WM_USER+2301)
+#define WM_MULE_IMM_MESSAGE_END               (WM_USER+2301)
+#define MESSAGE_IMM_COM_P(message)              \
+  (((message) >= WM_MULE_IMM_MESSAGE_START) &&  \
+   ((message) <= WM_MULE_IMM_MESSAGE_END))
+
+
+
+DEFUN ("ime-force-on", Fime_force_on, Sime_force_on, 0, 1, 0,
+       doc: /* Force status of IME open.  */)
+  (eventp)
+     Lisp_Object eventp;
+{
+  if (fIME && !NILP (Vime_control))
+    {
+      HIMC himc;
+      HWND hwnd;
+
+      if (!NILP (Fime_get_mode ()))
+	return Qnil;
+#ifdef HAVE_NTGUI
+      if (NILP (eventp))
+	IME_event_off_count++;
+      hwnd = FRAME_W32_WINDOW (SELECTED_FRAME ());
+#else
+      hwnd = hwndConsole;
+#endif
+      SendMessage (hwnd, WM_MULE_IMM_SET_STATUS, 1, 0);
+    }
+  return Qnil;
+}
+
+
+DEFUN ("ime-force-off", Fime_force_off, Sime_force_off, 0, 1, 0,
+       doc: /* Force status of IME close.  */)
+  (eventp)
+     Lisp_Object eventp;
+{
+  if (fIME && !NILP (Vime_control))
+    {
+      HIMC himc;
+      HWND hwnd;
+
+      if (NILP (Fime_get_mode ()))
+	return Qnil;
+#ifdef HAVE_NTGUI
+      if (NILP (eventp))
+	IME_event_off_count++;
+      hwnd = FRAME_W32_WINDOW (SELECTED_FRAME ());
+#else
+      hwnd = hwndConsole;
+#endif
+      SendMessage (hwnd, WM_MULE_IMM_SET_STATUS, 0, 0);
+    }
+  return Qnil;
+}
+
+conversion_agent_wndproc (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+
+    case WM_MULE_IMM_SET_STATUS:
+      w32_set_ime_status (hwnd, (int) wparam);
+      break;
+
+    case WM_MULE_IMM_GET_STATUS:
+      return w32_get_ime_status (hwnd);
+
+
+
+// 主窗口过程中调用
+if (MESSAGE_IMM_COM_P(msg))
+    return conversion_agent_wndproc (hwnd, msg, wParam, lParam);
+
+#+end_src
+
+* mingw简要版(过时)
+先关闭杀毒软件，免得误报干扰
+
+将C:\MinGW\msys\1.0\bin\sh.exe改名
+
+打补丁
+F:\build-emacs\emacs-24.2-smart-ime-mingw> patch -p1 < ..\emacs-24.0.95-smart-ime.patch
+
+cd nt
+
+configure.bat --with-gcc --no-debug --without-png --without-jpeg --without-tiff --without-gif --cflags -IF:/build-emacs/libxpm-3.5.8-w32-src/include --cflags -IF:/build-emacs/libxpm-3.5.8-w32-src/src
+
+mingw32-make
+
+mingw32-make install INSTALL_DIR=F:/myemacs-24.2-smart-ime-mingw
+
+** 废弃
+//configure.bat --with-gcc --no-debug --cflags -ID:/gnuwin32/include --cflags -IC:/gnuwin32/src/lib
+
+* msvc简要版
+用vc++ 2010 express
+先执行vcvars32.bat （不怕路径中有mingw和msys等）
+~/work/emacs-23.3$ patch -p1 < ../emacs-23.3-smart-ime.patch
+cd nt
+configure.bat --with-msvc --no-debug --cflags -ID:/gnuwin32/include --cflags -IC:/gnuwin32/src/lib
+nmake
+nmake info （此步不需要）
+nmake install INSTALL_DIR=F:/myemacs
+
+** emacsclientw.exe是个控制台程序
+lib-src\makefile.w32-in中查找-mwindows
+将所在行从
+$(LINK) $(LINK_OUT)$@ $(CLIENTRES) -mwindows $(LINK_FLAGS) $(ECLIENTOBJS) $(WSOCK32) $(USER32) $(COMCTL32) $(LIBS)
+修改为
+$(LINK) $(LINK_OUT)$@ $(CLIENTRES) /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup $(LINK_FLAGS) $(ECLIENTOBJS) $(WSOCK32) $(USER32) $(COMCTL32) $(LIBS)
+
+
+** make clean不能工作
+
+按邮件列表中的官方回复，msvc维护不够。
+* 生成补丁
+用winmerge就能生成，注意修改补丁文件顶部的路径
+
+* 官方发布了新版emacs后如何产生emacs-smart-ime-mingw
+例如官方代码在文件夹emacs-24.4中
+复制该文件夹，重命名为emacs-24.4-smart-ime-mingw
+
+进入emacs-24.4-smart-ime-mingw，打老补丁，例如
+emacs-24.4-smart-ime-mingw$ patch -p1 < ../emacs-24.3-smart-ime.patch
+
+如果显示成功，我们还不放心，再用winmerge比较一下打补丁前后：
+F:\build-emacs\emacs-24.4\src\w32fns.c
+F:\build-emacs\emacs-24.4-smart-ime-mingw\src\w32fns.c
+
+确认一下补丁是否打得正确。
+
+现在可以编译了
+
+进MinGW的命令行窗口
+直接去emacs源文件目录，而不是其下的nt子目录
+CFLAGS='-I/f/build-emacs/libxpm-3.5.8-w32-src/include -I/f/build-emacs/libxpm-3.5.8-w32-src/src' ./configure --prefix=/f/myemacs-24.4-smart-ime-mingw
+make
+make install
+* 
+
+* 命名规则
+emacs-24.4 官方的二进制包
+myemacs-24.4 自己编译的
+emacs-24.4-smart-ime-mingw 自己（用mingw）编译的，带smart-ime功能
+
+
+* windows下各路输入法与emacs的配合情况
+我尝试了以下输入法：
+
+    QQ拼音输入法 4.5 (2004)
+
+        ok
+
+    QQ拼音输入法 4.4 (1116) 
+
+        与emacs的配合存在bug了，重现步骤如下：
+        emacs -q
+        M-x server-start
+        用QQ输入法打几个汉字，但不要上屏，然后按backspace将拼音全部删除
+        此时，你通过emacsclient开打文件将毫无反应。
+
+    拼音加加输入法 5.2 正式版
+
+              ok
+
+    搜狗拼音输入法6.1正式版(6.1.0.6953)
+
+        smart-ime第一次操控输入法状态时不能正常响应，之后就正常了。
+
+    搜狗智慧版 1.0.3
+
+        smart-ime第一次操控输入法状态时不能正常响应，之后就正常了。
+
+    微软拼音输入法 2010 新体验风格
+
+        候选窗口不能跟随光标，而且始终不能正常响应smart-ime对输入法状态的操控。
+
+    微软拼音输入法 2010 简洁风格
+
+        候选窗口不能跟随光标，而且始终不能正常响应smart-ime对输入法状态的操控。
+
+    微软英库拼音输入法 1.0.413.03
+
+        始终不能正常响应smart-ime对输入法状态的操控。
+
+    谷歌拼音输入法 2.7.21.114
+
+        候选窗口不能跟随光标。

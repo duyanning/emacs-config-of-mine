@@ -1,0 +1,11 @@
+* 将自己编写或改写的一些包放到packages目录下，跟外部包一致处理，以方便共享给他人。
+* ws-forward-word应该支持arg参数。
+
+* code complete中推荐的用伪代码编程。在emacs中如何用注释来写伪代码。
+C-j后，按语法缩进
+按语法缩进对齐上一行，但上一行如果是注释，就会忽略。
+* PATH的问题
+为何能访问到gzip，却访问不到diff。看样子emacs自己解压.el.gz用的gzip从exce-path中找，但用户发起的diff就不从这里找了，而必须放在PATH里
+M-! where diff可以找到
+M-! where gzip却找不到
+

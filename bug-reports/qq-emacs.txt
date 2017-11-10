@@ -1,0 +1,8 @@
+make server process failed: invalid argument, :name, server, :server, t, :noquery, t, :sentinel, server-sentinel, :filter, server-process-filter, :coding, raw-text-unix, :family, ipv4, :service, t, :host, 127.0.0.1, :plist, (:authenticated nil)
+
+
+
+Spawning child process: resource temporarily unavailable
+
+
+ÊÇQQÆ´ÒôµÄbugµ¼ÖÂ¡£

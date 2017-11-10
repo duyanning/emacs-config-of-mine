@@ -81,7 +81,7 @@
   "Open the .emacs file"
   (interactive)
   ;;(find-file user-init-file)
-  (find-file "~/emacs-config-of-mine/init.el")
+  (find-file "~/emacs-config-of-mine/myinit.el")
   )
 
 (defun no-op ()

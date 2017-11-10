@@ -1,0 +1,14 @@
+llllllllllllllll
+MMMMMMMMMMMMMMMM
+我的名字叫杜延宁
+
+(上面这三行的右边缘应该是对齐的.)
+
+win7: 齐
+-outline-Consolas-normal-normal-normal-mono-16-*-*-*-c-*-iso8859-1
+-outline-YaHei Consolas Hybrid-normal-normal-normal-mono-16-*-*-*-c-*-gb2312.1980-0
+
+ubuntu 10.04: 不齐
+-microsoft-Consolas-normal-normal-normal-*-16-*-75-75-m-0-iso10646-1
+-microsoft-YaHei Consolas Hybrid-normal-normal-normal-*-16-*-75-75-*-0-iso10646-1
+-microsoft-YaHei Consolas Hybrid-normal-normal-normal-*-16-*-75-75-*-0-iso10646-1

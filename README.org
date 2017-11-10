@@ -1,0 +1,67 @@
+; -*-org-*-
+
+
+将这个文件夹直接复制到别的机子上。
+
+复制前先在~下运行
+su .emacs.d\set-links.ps1 remove
+（这部目前已经不需要了，因为本文件内部再无符号链接）
+
+复制到别的机子上之后，在别的机子上运行
+su .emacs.d\set-links.ps1
+（建议用专门的软件代替此步，可参考set-links.ps1中的注释）
+
+然后导入ms-win下的注册表文件
+
+然后安装字体
+font\YaHei.Consolas.1.12.ttf
+
+一切ok。
+
+
+* 我的.emacs
+依赖于epm。
+
+
+
+* 功能
+** bc.el
+利用bc对region中的表达式求值，并将结果插入当前buffer光标处。
+
+** ebrowse-helper.el
+重新产生BROWSE文件并加载
+
+** smart-ime.el
+** smart-kill.el
+** ws/
+中文分词。在叶文彬（http://www.emacswiki.org/emacs/Ye_Wenbin） 代码基础上修改。
+** doc-struct.el
+文档结构图
+
+* windows注册表中的设置
+所有的设置都在emacs.reg中，双击导入即可
+
+** home的位置
+把.emacs文件放在哪？
+当然是放在~/中。
+新建一文件夹，或者选择某已经存在的文件夹，作为你的HOME
+在HKCU\SOFTWARE\GNU\Emacs\下新建字符串值HOME，让其指向该文件夹，比如F:\dyn
+双击运行解开的文件夹下bin中的runemacs
+把下边这行贴到emacs中名为*Scratch*的buffer中
+(insert (getenv "HOME"))
+把光标停到最后，按C-j，看输出的是不是你环境变量HOME所指向的那个文件夹。（应该是，必须是）
+启动emacs后，emacs会自动在你设定的HOME下建立新文件夹.emacs.d，这个不用管，只是不要惊讶。
+
+** 通过右键菜单启动emacs
+启动注册表编辑器
+新建项HKEY_CLASSES_ROOT\*\shell\Emacs
+编辑默认值，设为：用Emacs编辑：
+新建项HKEY_CLASSES_ROOT\*\shell\Emacs\command
+编辑默认值，设为："F:\emacs-23.3\bin\emacsclientw" -na "F:\emacs-23.3\bin\runemacs.exe"  "%1"
+引号是为了防止路径中的空格引起问题。
+（注意：根据emacs所在位置修改上边这行，这是我电脑上的位置）
+
+** 去除工具栏
+在HKCU\SOFTWARE\GNU\Emacs\下新建字符串值
+Emacs.Toolbar，值设为-1
+

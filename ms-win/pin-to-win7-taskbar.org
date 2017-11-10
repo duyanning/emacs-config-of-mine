@@ -1,0 +1,8 @@
+-*- coding: utf-8; -*-
+启动emacs，pin。
+任务栏有了图标，点击后有黑窗口。
+为了去除黑窗口，去
+C:\Users\duyanning\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar
+编辑相应的快捷方式。
+使其运行runemacs.exe，而不是emacs.exe。
+

@@ -1,0 +1,45 @@
+
+
+read-file-name
+  x-file-dialog 有问题，位于win32fns.c
+
+DEFUN ("x-file-dialog", Fx_file_dialog, Sx_file_dialog, 2, 5, 0,
+       doc: /* Read file name, prompting with PROMPT in directory DIR.
+Use a file selection dialog.  Select DEFAULT-FILENAME in the dialog's file
+selection box, if specified.  If MUSTMATCH is non-nil, the returned file
+or directory must exist.
+
+This function is only defined on MS Windows, and X Windows with the
+Motif or Gtk toolkits.  With the Motif toolkit, ONLY-DIR-P is ignored.
+Otherwise, if ONLY-DIR-P is non-nil, the user can only select directories.  */)
+  (Lisp_Object prompt, Lisp_Object dir, Lisp_Object default_filename, Lisp_Object mustmatch, Lisp_Object only_dir_p)
+{
+
+
+
+GetOpenFileName 
+应该用
+GetSaveFileName 
+
+
+===============================================
+Bug in x-file-dialog with GetOpenFileName
+
+Platform: Windows 7
+Emacs version: 24.2.1
+
+Steps to reproduce this bug:
+emacs -Q
+
+copy and paste the next line into the *scratch* buffer:
+(x-file-dialog "hi" "c:\\")
+
+C-x C-e to evaluate it.
+The dialog appears.
+
+Type "abc" (without the enclosing double quotes) in the "File name" field.
+Click the "Desktop" icon on the left side of the dialog.
+Click the "Open" button.
+The dialog does NOT disappear while it should.
+
+I have tried GetOpenFileName/GetSaveFileName in my own Win32 programs and found that this behavior is casued by GetOpenFileName and GetSaveFileName is OK in such situation. However, simply replacing GetOpenFileName with GetSaveFileName will break other code in x-file-dialog.

@@ -1,0 +1,21 @@
+-*- coding: utf-8; -*-
+* 在agenda buffer中关闭输入法
+http://orgmode.org/worg/org-configs/org-hooks.php
+
+一些有用的hook：
+org-agenda-finalize-hook
+org-agenda-mode-hook
+
+一些初步的想法：
+将ime-set-status暴露给lisp
+用lisp变量保存之前的输入法状态，而不是c变量。如此ime-save-and-set可能就不是在c代码而是在lisp代码中提供。
+
+难题：那些hook的被调用时机是在post-command-hook之前还是之后调用？
+从C-x b来看，我估计是之后。
+
+可能的解决办法：
+利用PMH，判断agenda-mode是否开启，如果是，则关闭。如果否则恢复。
+
+* 每个window有自己的输入法状态
+  [[file:~/.emacs.d/pmh.el::%3B%3B(defvar%20current-buffer-change-hook%20nil)][file:~/.emacs.d/pmh.el::;;(defvar current-buffer-change-hook nil)]]
+  也就是让windows的输入法知道emacs自己画出来的那些windows的存在。

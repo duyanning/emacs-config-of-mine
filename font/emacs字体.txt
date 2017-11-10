@@ -1,0 +1,129 @@
+
+buffer-face-mode
+variable-pitch-mode
+
+auto-mode-alist
+add-to-list
+
+
+;设置默认字体
+;; Setting English Font
+(set-face-attribute
+  'default nil :font "Consolas 11")
+;; Chinese Font
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font)
+                      charset
+                      (font-spec :family "Microsoft Yahei" :size 16)))
+
+
+put-text-property
+	face是字符串的一种属性
+
+
+(facemenu-set-face-from-menu 'fg:red 1 202)
+或
+(facemenu-set-face-from-menu 'bold 1 202)
+都可以工作。
+
+fg:red 把前景色设置为红色
+bold 使用bold face
+
+M-x buffer-face-set
+
+font-spec
+
+set-face-attribute
+
+
+
+有哪些font是系统决定的。
+而fontset则是可以在emacs中新建的。
+
+font可能只为某种语言的字符表或文字提供了字体。
+而fontset就相当于一种能为多种语言的字符表或文字提供字体的的font。
+
+能用font的地方就能用fontset。
+
+
+face里除了font还有别的内容。
+
+在.emacs中用defface新建face，新建的face在customize中可以看到。
+M-x buffer-face-set之后还可以选择这些face。
+
+
+
+(set-fontset-font t 'japanese-jisx0208
+                            (font-spec :family "Kochi Gothic"))
+
+
+(setq buffer-face-mode-face '(:family "楷体"))
+第三项可以填用defface创建的face的名字，也可以写'(:family "楷体")这样的。
+(buffer-face-mode))
+
+
+face的创建（无论通过defface还是字面表述）和使用都没问题。
+现在的问题是如何把face中的family指定成一个fontset而不是font.
+
+如何创建新的fontset。
+
+
+你可以试试M-x set-frame-font RET Tab 看看你系统里都安里那些字体.选择合适的填到(create-fontset-from-fontset-spec 里
+
+(insert (prin1-to-string (x-list-fonts "*")))
+
+M-x buffer-set-face
+
+
+M-x describe-fontset
+M-x describe-character-set
+M-x describe-face
+
+用补全功能可以看都有哪些。
+
+M-x set-face-font
+
+
+
+(set-fontset-font
+"fontset-gbk" 'iso-8859-1
+"楷体" nil 'prepend)
+
+有prepend，还有append，不写就是替换。
+效果用M-x describe-fontset可以看到。
+
+先用M-x describe-char查到一个字的代码，然后再M-x describe-fontset，找到这个字所在的区间，看用的都是什么字体。
+
+
+(set-fontset-font
+"fontset-dyn" 'iso-8859-1
+"楷体")
+
+不设置chinese-gbk，而设置iso-8859-1却有效。
+
+
+M-x list-character-sets
+M-x  list-fontsets
+M-x list-charset-chars
+
+make-face name
+
+find-file-hook
+
+
+----------------------------------------------------
+org-mode模式中，嵌入的源代码
+#+BEGIN_SRC c++
+  void foo();
+  int helloWorld()
+  {// 中国
+  return 0;
+  }
+
+#+END_SRC
+看起来跟其在c++-mode中的字体不一样。
+用M-x describe-char查看，两者的face都是
+font-lock-function-name-face或者其他font-lock.el中定义的face
+这些face的共同点是它们仅指定了颜色，而没有指定字体。
+似乎这就是同样具有这些face的文本在不同的模式下有不同的字体的原因。
+因为这些face没有指定字体，所以就用了缺省字体，所以就导致不一样。

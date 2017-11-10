@@ -1,0 +1,11 @@
+注意：不是在源码目录中就地编译，而是在新建的文件夹中编译。
+
+在msys的命令行下
+
+emacs-25.1-smart-ime-mingw-src$ patch -p1 < ../emacs-24.4-smart-ime.patch
+
+emacs-25.1-smart-ime-mingw-bin$ CFLAGS='-I/f/build-emacs/libxpm-3.5.8-w32-src/include -I/f/build-emacs/libxpm-3.5.8-w32-src/src' ../emacs-25.1-smart-ime-mingw-src/configure --with-modules --with-file-notification=w32 --prefix=/f/myemacs-25.1-smart-ime-mingw
+
+make
+
+make install

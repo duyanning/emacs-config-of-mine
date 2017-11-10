@@ -1,0 +1,22 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\GNU]
+
+[HKEY_CURRENT_USER\Software\GNU\Emacs]
+"HOME"="F:\\"
+;"Emacs.Toolbar"="-1"
+
+
+[HKEY_CLASSES_ROOT\*\shell\Emacs]
+@="Edit with Em&acs"
+
+[HKEY_CLASSES_ROOT\*\shell\Emacs\command]
+@="\"F:\\emacs\\bin\\emacsclientw\" -n -a \"F:\\emacs\\bin\\runemacs.exe\"  \"%1\""
+;@="\"F:\\emacs\\bin\\emacsclientw\" -n -c -a \"F:\\emacs\\bin\\runemacs.exe\"  \"%1\""
+
+
+; ×¢ÊÍÓÃ·ÖºÅ
+; É¾³ýkey£º
+; [-HKEY_CLASSES_ROOT\*\shell\Emacs\command]
+; É¾³ývalue£º
+; "Emacs.Toolbar"=-
