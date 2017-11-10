@@ -80,7 +80,9 @@
 (defun open-init-file ()
   "Open the .emacs file"
   (interactive)
-  (find-file user-init-file))
+  ;;(find-file user-init-file)
+  (find-file "~/emacs-config-of-mine/init.el")
+  )
 
 (defun no-op ()
   ""
