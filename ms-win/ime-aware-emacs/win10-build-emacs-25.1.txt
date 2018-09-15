@@ -9,3 +9,29 @@ emacs-25.1-smart-ime-mingw-bin$ CFLAGS='-I/f/build-emacs/libxpm-3.5.8-w32-src/in
 make
 
 make install
+=======================================
+emacs 26.1
+
+emacs-26.1-smart-ime-mingw-src$ patch -p1 < ../emacs-26.1-smart-ime.patch
+
+emacs-26.1-smart-ime-mingw-bin$ CFLAGS='-I/f/build-emacs/libxpm-3.5.8-w32-src/include -I/f/build-emacs/libxpm-3.5.8-w32-src/src' ../emacs-26.1-smart-ime-mingw-src/configure --with-modules --with-file-notification=w32 --with-gnutls=no --prefix=/f/myemacs-26.1-smart-ime-mingw
+
+make
+
+make install
+
+问题：
+make时报错
+$ make
+make -C nt all
+make[1]: Entering directory `/f/build-emacs/emacs-26.1-smart-ime-mingw-bin/nt'
+  RC       emacs.res
+'c:\Program' is not recognized as an internal or external command,
+operable program or batch file.
+c:\Program Files\Haskell Platform\8.2.2\mingw\bin\windres.exe: preprocessing failed.
+估计是因为haskell下的东西在干扰，从PATH中把haskell下的mingw的路径去掉
+
+
+make -j 7进行着，进行着好像卡住了，看nt/INSTALL里也说可能会被卡住。算了，不要用这个参数了。
+Ctrl-C无效，用任务管理器结束make
+
