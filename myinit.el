@@ -367,7 +367,7 @@
 
   
   ;;(configure-ibus)                 ; 并非所有linux系统的输入法都是ibus
-  (configure-chinese-pyim)
+  (configure-pyim)
 
   ;; 使得能够在emacs跟其他程序之间复制粘贴
   (setq x-select-enable-clipboard t)
@@ -530,16 +530,16 @@
 
 
 
-;; https://github.com/tumashu/chinese-pyim
-(defun configure-chinese-pyim ()
-  (when (add-package 'chinese-pyim "~/non-exist")
-    (require 'chinese-pyim)
-    (require 'chinese-pyim-basedict)
-    (chinese-pyim-basedict-enable)
+;; https://github.com/tumashu/pyim
+(defun configure-pyim ()
+  (when (add-package 'pyim "~/non-exist")
+    (require 'pyim)
+    (require 'pyim-basedict)
+    (pyim-basedict-enable)
     ;; (require 'chinese-pyim-greatdict)
     ;; (chinese-pyim-greatdict-enable)
 
-    (setq default-input-method "chinese-pyim")
+    (setq default-input-method "pyim")
     (setq pyim-default-scheme 'microsoft-shuangpin)
 
     ;;(global-set-key (kbd "C-;") 'toggle-input-method)
