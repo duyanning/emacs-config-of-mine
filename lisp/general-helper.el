@@ -157,3 +157,22 @@ When called without a prefix argument, kill just the current buffer
 e.g. Sunday, September 17, 2000."
   (interactive)                 ; permit invocation in minibuffer
   (insert (format-time-string "%A, %B %e, %Y")))
+
+
+;; 运行了这个命令之后，最好再C-x C-v，重新打开该文件以便应用正确的模式
+(defun insert-mode-line (name)
+  "在文件开头插入模式行"
+  (interactive
+   (list
+    (read-from-minibuffer "mode name: ")
+    ))
+  (progn
+    (save-restriction
+      (widen)
+      (save-excursion
+        (goto-char (point-min))
+        (insert (format "// -*- mode: %s; -*-" name))
+        (newline))) ; save-restriction
+    ) ; progn
+  ;;(force-mode-line-update)              
+  )
