@@ -67,7 +67,8 @@
 (defvar paredit-path "~/.emacs.d/packages/paredit.el") ; http://emacswiki.org/emacs/ParEdit
 (defvar ace-jump-mode-path "~/.emacs.d/packages/ace-jump-mode.el") ; https://github.com/winterTTr/ace-jump-mode/wiki
 (defvar yaml-mode-path "~/.emacs.d/packages/yaml-mode/") ; https://github.com/yoshiki/yaml-mode
-(defvar cmake-mode-path "/usr/share/emacs/site-lisp/cmake-mode.el")
+;;(defvar cmake-mode-path "/usr/share/emacs/site-lisp/cmake-mode.el")
+(defvar cmake-mode-path "~/non-exist")
 (defvar douban-music-mode-path "~/.emacs.d/packages/douban-music-mode.el") ; https://github.com/zhengyuli/DoubanMusic
 (defvar weibo-path "~/.emacs.d/packages/weibo.emacs-master/")
 (defvar unicad-path "~/.emacs.d/packages/unicad.el")  ; https://code.google.com/p/unicad/wiki/FAQ_Chinese
@@ -273,7 +274,7 @@
   (configure-yasnippet)
   (configure-markdown-mode)
   (configure-yaml-mode)
-  (configure-cmake-mode)
+  (configure-cmake-mode)                ; 必须放在
   (configure-paredit)
   (configure-ace-jump-mode)
   (configure-calendar/diary)
@@ -353,7 +354,7 @@
   (configure-epm)
 
   ;;(configure-edect) ; emacs自带的已经很好用了。
-  (configure-semantic)
+  ;;(configure-semantic) ; 没多有用，慢吞吞的
 
   (global-set-key (kbd "<C-mouse-4>") 'text-scale-increase)
   (global-set-key (kbd "<C-mouse-5>") 'text-scale-decrease))
@@ -486,8 +487,8 @@
     ;;   (require 'org-install))
 
 
-    (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-    (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+    ;; (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))  ; 算了，CMakeLists.txt也会中招
+    (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode)) 
     ;;(add-to-list 'auto-mode-alist '("\\.txt\\'" . orgtbl-mode))
     ;; (add-to-list 'auto-mode-alist '("\\.txt\\'" . orgstruct-mode))
     ;; (add-to-list 'auto-mode-alist '("\\.txt\\'" . orgstruct++-mode))
@@ -598,7 +599,8 @@
 
 (defun configure-semantic ()
   ;; 参考emacs手册Programs/Semantic一节，以及更全面的semantic手册
-
+  ;; https://www.gnu.org/software/emacs/manual/html_node/semantic/index.html
+  
   (semantic-mode 1)
 
 
@@ -923,13 +925,13 @@
   )
 
 
+;;(configure-cmake-mode)
 (defun configure-cmake-mode ()
-  (if (not (file-exists-p cmake-mode-path))
-      (message "no cmake-mode")
-    (add-to-load-path cmake-mode-path)
+  (when (add-package 'cmake-mode cmake-mode-path)
     (autoload 'cmake-mode "cmake-mode.el" "Major mode for editing CMake listfiles." t)
     (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
     (add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
+    
     (add-hook 'cmake-mode-hook
               '(lambda ()
                  (define-key cmake-mode-map "\C-c\C-c" 'comment-region)))
