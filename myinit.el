@@ -220,7 +220,12 @@
   (column-number-mode t)
   (show-paren-mode t)
   (global-set-key (kbd "C-z") 'undo)
-  (global-set-key (kbd "C-_") 'suspend-frame) ; 奇怪啊，如果写C-/，总是检测到C-_。
+
+  ;; 奇怪啊，如果写C-/，总是检测到C-_。http://www.newsmth.net/nForum/#!article/Emacs/120685
+  (if (is-term)
+      (global-set-key (kbd "C-_") 'suspend-frame) 
+    (global-set-key (kbd "C-/") 'suspend-frame))
+  
   (global-set-key (kbd "C-c w") 'delete-region)
   (global-set-key (kbd "C-c k") 'server-edit)
   (setq-default indicate-empty-lines t)
@@ -1051,7 +1056,7 @@
 
 ;; 要用这个东西还得先通过npm安装https://github.com/clausreinke/typescript-tools
 (defun configure-tss-mode ()
-	(when (add-package 'magit "~/non-exist")
+	(when (add-package 'tss-mode "~/non-exist")
   ;; 以下配置是从https://github.com/aki2o/emacs-tss 直接抄过来的
   ;; If use bundled typescript.el,
   (require 'typescript)
