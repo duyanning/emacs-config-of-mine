@@ -220,7 +220,7 @@
   (column-number-mode t)
   (show-paren-mode t)
   (global-set-key (kbd "C-z") 'undo)
-  (global-set-key (kbd "C-/") 'suspend-emacs)
+  (global-set-key (kbd "C-_") 'suspend-frame) ; 奇怪啊，如果写C-/，总是检测到C-_。
   (global-set-key (kbd "C-c w") 'delete-region)
   (global-set-key (kbd "C-c k") 'server-edit)
   (setq-default indicate-empty-lines t)
