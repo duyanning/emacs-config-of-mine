@@ -266,7 +266,8 @@
 
   ;;(configure-helm-mode)
 
-
+  (when (not (is-term))
+    (configure-tabbar-mode))
   (configure-org-mode)
   (configure-color-theme)
   (configure-c++-mode)
@@ -279,7 +280,7 @@
   (configure-yasnippet)
   (configure-markdown-mode)
   (configure-yaml-mode)
-  (configure-cmake-mode)                ; 必须放在
+  (configure-cmake-mode)
   (configure-paredit)
   (configure-ace-jump-mode)
   (configure-calendar/diary)
@@ -1124,6 +1125,14 @@
     )
   )
 
+;; (configure-tabbar-mode)
+(defun configure-tabbar-mode ()
+  (when (add-package 'tabbar "~/non-exist") ; 注意：人家provide的是tabbar，而非tabbar-mode
+    (require 'tabbar)
+    ;;(setq tabbar-mode t) ; 文档说设置这个变量没用
+    (tabbar-mode)
+    )
+  )
 
 
 ;; 例子
