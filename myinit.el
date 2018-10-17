@@ -196,6 +196,7 @@
 
 
   (setq inhibit-startup-screen t)
+  (setq visible-bell t)                 ; 我讨厌emacs发出声音
   (setq column-number-mode t)
   (setq scroll-bar-mode-explicit t)
   (set-scroll-bar-mode 'right)
