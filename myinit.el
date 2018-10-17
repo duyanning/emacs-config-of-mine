@@ -268,6 +268,7 @@
 
   (when (not (is-term))
     (configure-tabbar-mode))
+  (configure-text-mode)
   (configure-org-mode)
   (configure-color-theme)
   (configure-c++-mode)
@@ -482,6 +483,31 @@
   (setq safe-local-variable-values (cons '(after-save-hook . org-mobile-push) 
                                          safe-local-variable-values))  
   )
+
+;; (configure-text-mode)
+(defun configure-text-mode ()
+  (add-hook 'text-mode-hook
+            '(lambda ()
+               (electric-pair-mode 1)
+               (subword-mode 1)           ; 视大写字母为word的边界，helloWorldChina
+               (ws-mode)                  ; 中文分词
+               (pmh-mode)
+               ;; 在汉字中启用ws-mode，在英文中启用subword-mode
+               (add-hook 'pmh-hook '(lambda ()
+                                      (if (looking-at "\\cc")
+                                          (progn
+                                            (setq subword-mode nil)
+                                            (setq ws-mode t)
+                                            )
+                                        (setq subword-mode t)
+                                        (setq ws-mode nil)))
+                         nil
+                         t
+                         )
+               
+               ))
+  )
+
 
 (defun configure-org-mode ()
   (when (add-package 'org (concat org-path "lisp"))
