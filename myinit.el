@@ -229,6 +229,9 @@
   (if (is-term)
       (global-set-key (kbd "C-_") 'suspend-frame) 
     (global-set-key (kbd "C-/") 'suspend-frame))
+
+  (when (is-term)
+    (xterm-mouse-mode))
   
   (global-set-key (kbd "C-c w") 'delete-region)
   (global-set-key (kbd "C-c k") 'server-edit)
