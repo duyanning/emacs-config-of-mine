@@ -71,7 +71,7 @@
 (defvar cmake-mode-path "~/non-exist")
 (defvar douban-music-mode-path "~/.emacs.d/packages/douban-music-mode.el") ; https://github.com/zhengyuli/DoubanMusic
 (defvar weibo-path "~/.emacs.d/packages/weibo.emacs-master/")
-(defvar unicad-path "~/.emacs.d/packages/unicad.el")  ; https://code.google.com/p/unicad/wiki/FAQ_Chinese
+(defvar unicad-path "~/emacs-config-of-mine/3rd-lisp/unicad.el")  ; https://code.google.com/p/unicad/wiki/FAQ_Chinese
 (defvar web-mode-path "~/.emacs.d/packages/web-mode.el") ; http://web-mode.org/
 
 ;; 有意思的东西
@@ -176,9 +176,11 @@
                              " - Emacs"))
 
   (add-to-list 'load-path "~/emacs-config-of-mine/lisp/")
+  (add-to-list 'load-path "~/emacs-config-of-mine/3rd-lisp/")
   (add-to-list 'load-path "~/emacs-config-of-mine/ws/")
-  (add-to-list 'load-path "~/.emacs.d/packages/")
-  (add-to-list 'image-load-path "~/.emacs.d/images/")
+  ;;(add-to-list 'load-path "~/.emacs.d/packages/")
+  ;;(add-to-list 'image-load-path "~/.emacs.d/images/")
+  (add-to-list 'image-load-path "~/emacs-config-of-mine/images/")
 
 
   (when (file-exists-p "~/share/emacs/lisp/")
