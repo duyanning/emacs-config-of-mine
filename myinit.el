@@ -1297,7 +1297,8 @@
   ;; glass-mode
 
   ;;我要按照<<Code Complete>>的建议在缩进的注释中写伪代码，/会导致当前行被自动缩进
-  (c-toggle-electric-state -1)
+  (c-toggle-electric-state 1)
+  ;;(c-toggle-electric-state -1)
   ;;(setq c-syntactic-indentation nil)
 
   (fix-enum-class)
