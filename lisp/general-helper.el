@@ -176,3 +176,13 @@ e.g. Sunday, September 17, 2000."
     ) ; progn
   ;;(force-mode-line-update)              
   )
+
+
+;; 关闭所有跟文件不关联的buffer
+(defun kill-no-file-buffers ()
+  (interactive)
+  (dolist (buf (buffer-list))
+    (let ((file-name (buffer-file-name buf)))
+      (when (and file-name
+                 (not (file-exists-p file-name)))
+        (kill-buffer-ask buf)))))
