@@ -329,6 +329,7 @@
 
   ;;(w32-register-hot-key [M-tab]) ; win7下无效
   ;;(w32-unregister-hot-key [M-tab])
+  (configure-magit)
   (configure-ntcmd-mode)
   (configure-powershell)
   (configure-powershell-mode)
