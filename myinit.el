@@ -320,10 +320,16 @@
     (smart-ime-mode 1))
 
   ;; 自己编译的emacs，所有.el文件都被打包成.el.gz，查看源代码时需要gzip解开。gzip位于此处。
-  (add-to-list 'exec-path "F:/MinGW/msys/1.0/bin")
+  ;;(add-to-list 'exec-path "F:/MinGW/msys/1.0/bin")
+
+  (add-to-list 'exec-path "C:/Program Files/Git/usr/bin")
+  (add-to-list 'exec-path "C:/Program Files/Git/bin")
+
+  
 
   ;;(w32-register-hot-key [M-tab]) ; win7下无效
   ;;(w32-unregister-hot-key [M-tab])
+  (configure-magit)
   (configure-ntcmd-mode)
   (configure-powershell)
   (configure-powershell-mode)
