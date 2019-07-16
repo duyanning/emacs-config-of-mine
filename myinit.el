@@ -65,7 +65,7 @@
 (defvar visual-basic-mode-path "~/.emacs.d/packages/visual-basic-mode.el") ; http://xahlee.org/visual_basic/emacs_visualbasic_mode.html
 (defvar markdown-mode-path "~/.emacs.d/packages/markdown-mode.el") ; http://jblevins.org/projects/markdown-mode/
 (defvar paredit-path "~/.emacs.d/packages/paredit.el") ; http://emacswiki.org/emacs/ParEdit
-(defvar ace-jump-mode-path "~/.emacs.d/packages/ace-jump-mode.el") ; https://github.com/winterTTr/ace-jump-mode/wiki
+(defvar ace-jump-mode-path "~/non-exist") ; https://github.com/winterTTr/ace-jump-mode/wiki
 (defvar yaml-mode-path "~/.emacs.d/packages/yaml-mode/") ; https://github.com/yoshiki/yaml-mode
 ;;(defvar cmake-mode-path "/usr/share/emacs/site-lisp/cmake-mode.el")
 (defvar cmake-mode-path "~/non-exist")
