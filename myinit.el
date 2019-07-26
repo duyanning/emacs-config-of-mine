@@ -1,4 +1,4 @@
-﻿;; created 2008
+;; created 2008
 
 
 ;; .emacs就是一个程序，这意味着：
@@ -322,8 +322,9 @@
   ;; 自己编译的emacs，所有.el文件都被打包成.el.gz，查看源代码时需要gzip解开。gzip位于此处。
   ;;(add-to-list 'exec-path "F:/MinGW/msys/1.0/bin")
 
-  (add-to-list 'exec-path "C:/Program Files/Git/usr/bin")
-  (add-to-list 'exec-path "C:/Program Files/Git/bin")
+  ;; (add-to-list 'exec-path "C:/Program Files/Git/usr/bin")
+  ;; (add-to-list 'exec-path "C:/Program Files/Git/bin")
+  (add-to-list 'exec-path "F:/portapp/cmder/vendor/git-for-windows/bin")
 
   
 
