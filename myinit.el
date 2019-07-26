@@ -376,6 +376,8 @@
   ;;(configure-edect) ; emacs自带的已经很好用了。
   ;;(configure-semantic) ; 没多有用，慢吞吞的
 
+  (configure-ggtags)
+
   (global-set-key (kbd "<C-mouse-4>") 'text-scale-increase)
   (global-set-key (kbd "<C-mouse-5>") 'text-scale-decrease))
 
@@ -676,6 +678,15 @@
 
   )
 
+;; https://github.com/leoliu/ggtags
+(defun configure-ggtags ()
+  (when (add-package 'ggtags "~/non-exist")
+    (add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+              (ggtags-mode 1))))
+      )
+  )
 
 (defun configure-xah-find ()
   (setq xah-find-file-separator "\n")   ; ───
