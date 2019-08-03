@@ -79,7 +79,7 @@
 ;; 选中单词，M-x mc/mark-all-like-this，对所有出现该单词的地方进行编辑
 
 (defvar my-favorite-color-theme 'light-blue)
-(defvar my-favorite-terminal-color-theme 'leuven)
+(defvar my-favorite-terminal-color-theme 'misterioso)
 
 
 ;;;; ~/.emacs.d/env.el就相当于.emacs这个程序的配置文件。
