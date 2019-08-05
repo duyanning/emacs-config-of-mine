@@ -80,6 +80,7 @@
 
 (defvar my-favorite-color-theme 'light-blue)
 (defvar my-favorite-terminal-color-theme 'misterioso)
+(defvar windows-git-bin-path "C:/Program Files/Git/bin")
 
 
 ;;;; ~/.emacs.d/env.el就相当于.emacs这个程序的配置文件。
@@ -323,8 +324,9 @@
   ;;(add-to-list 'exec-path "F:/MinGW/msys/1.0/bin")
 
   ;; (add-to-list 'exec-path "C:/Program Files/Git/usr/bin")
-  ;; (add-to-list 'exec-path "C:/Program Files/Git/bin")
-  (add-to-list 'exec-path "F:/portapp/cmder/vendor/git-for-windows/bin")
+  ;;(add-to-list 'exec-path "C:/Program Files/Git/bin")
+  (add-to-list 'exec-path windows-git-bin-path)
+  ;;(add-to-list 'exec-path "F:/portapp/cmder/vendor/git-for-windows/bin")
 
   
 
