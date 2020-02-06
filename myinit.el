@@ -378,6 +378,7 @@
 
   ;;(configure-edect) ; emacs自带的已经很好用了。
   ;;(configure-semantic) ; 没多有用，慢吞吞的
+  (configure-lsp)
 
   (configure-ggtags)
 
@@ -689,6 +690,17 @@
             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
               (ggtags-mode 1))))
       )
+  )
+
+;; https://github.com/emacs-lsp/lsp-mode
+;; 要想在obj.之后列出成员函数，还需要安装company-lsp这个包
+(defun configure-lsp ()
+  (when (add-package 'lsp-mode "~/non-exist")
+    (setq lsp-keymap-prefix "C-l")
+
+    (require 'lsp-mode)
+    (add-hook 'c++-mode-hook #'lsp)
+    )
   )
 
 (defun configure-xah-find ()
