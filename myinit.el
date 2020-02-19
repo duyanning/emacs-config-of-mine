@@ -157,6 +157,11 @@
       t
     nil))
 
+;; 参考：https://emacs.stackexchange.com/questions/47782/is-there-a-way-emacs-can-infer-is-running-on-wsl-windows-subsystem-for-linux
+(defun is-wsl ()
+  (if (string-match "-[Mm]icrosoft" operating-system-release)
+   t
+  nil))
 
 ;;;; 加载设置（以load打头），短而简单的配置，就直接在
 ;;;; load函数中做了；长而复杂的配置，在load中调用相应的configure函数。
@@ -409,7 +414,26 @@
   (when (fboundp 'ime-save-and-set-status)
     (require 'smart-ime)
     (smart-ime-mode 1))
-)
+  )
+
+(defun load-wsl-settings ()
+  (load-ubuntu-settings)
+
+  ;; 共享剪贴板
+  (unless window-system
+    (when (getenv "DISPLAY")
+      (defun xsel-cut-function (text &optional push)
+        (with-temp-buffer
+          (insert text)
+          (call-process-region (point-min) (point-max) "fake-xsel" nil 0 nil "-b" "-i")))
+      (defun xsel-paste-function()
+        (let ((xsel-output (shell-command-to-string "fake-xsel -b -o")))
+          (unless (string= (car kill-ring) xsel-output)
+            xsel-output )))
+      (setq interprogram-cut-function 'xsel-cut-function)
+      (setq interprogram-paste-function 'xsel-paste-function)
+      ))
+  )
 
 
 (defun load-term-settings ()
@@ -694,6 +718,8 @@
 
 ;; https://github.com/emacs-lsp/lsp-mode
 ;; 要想在obj.之后列出成员函数，还需要安装company-lsp这个包
+;; lsp-mode跟xref配合，M-.可以去标识符的定义处，M-,可以返回原来位置。
+;; 这个功能跟ggtags提供的功能重复，快捷键都一样。
 (defun configure-lsp ()
   (when (add-package 'lsp-mode "~/non-exist")
     (setq lsp-keymap-prefix "C-l")
@@ -1476,7 +1502,9 @@
 
 ;; 调整默认字体大小后再最大化窗口，所以将主入口放在自动生成的配置之后。
 ;;;; 主入口（main entry）
+;;;; 下列is-xxx函数的顺序很重要，因为有可能多个is-xxx都为真。
 (cond 
+ ((is-wsl) (load-wsl-settings))        ; WSL
  ((is-ubuntu) (load-ubuntu-settings))  ; Ubuntu
  ((is-winxp) (load-winxp-settings))    ; Windows XP
  ((is-win7) (load-win7-settings))      ; Windows 7+
