@@ -159,7 +159,7 @@
 
 ;; 参考：https://emacs.stackexchange.com/questions/47782/is-there-a-way-emacs-can-infer-is-running-on-wsl-windows-subsystem-for-linux
 (defun is-wsl ()
-  (if (string-match "-[Mm]icrosoft" operating-system-release)
+  (if (and operating-system-release (string-match "-[Mm]icrosoft" operating-system-release)) ; operating-system-release在wsl下有值，在windows下却为nil
    t
   nil))
 
@@ -262,6 +262,10 @@
   ;; (add-hook 'java-mode-hook 'my-java-mode-hook)
 
   ;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+  ;(modify-coding-system-alist 'file "\\.txt\\'" 'utf-8-unix)
+  ; 避免windows下保存含汉字文档，或者退出时ac-comphist.dat中有汉字时，emacs要求输入文件编码的问题
+  (setq coding-system-for-write 'utf-8-unix)
 
   (global-set-key (kbd "<C-f8>") 'insert-key-sequence)
 
