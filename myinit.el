@@ -391,6 +391,8 @@
 
   (configure-ggtags)
 
+  (configure-sudo-edit)
+
   (global-set-key (kbd "<C-mouse-4>") 'text-scale-increase)
   (global-set-key (kbd "<C-mouse-5>") 'text-scale-decrease))
 
@@ -672,6 +674,14 @@
   (when (add-package 'magit "~/non-exist")
     ;;(require ')
     (global-set-key (kbd "C-x g") 'magit-status)
+    )
+  )
+
+;; M-x sudo-edit后就可以以root身份编辑文件。
+(defun configure-sudo-edit ()
+  (when (add-package 'sudo-edit "~/non-exist")
+    (require 'sudo-edit)
+    ;;(global-set-key (kbd "C-c C-r") 'sudo-edit)
     )
   )
 
