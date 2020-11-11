@@ -186,8 +186,9 @@
   (add-to-list 'load-path "~/emacs-config-of-mine/ws/")
   ;;(add-to-list 'load-path "~/.emacs.d/packages/")
   ;;(add-to-list 'image-load-path "~/.emacs.d/images/")
-  (add-to-list 'image-load-path "~/emacs-config-of-mine/images/")
-
+  (when (boundp 'image-load-path)
+    (add-to-list 'image-load-path "~/emacs-config-of-mine/images/")
+    )
 
   (when (file-exists-p "~/share/emacs/lisp/")
     (add-to-load-path "~/share/emacs/lisp/"))
@@ -208,7 +209,10 @@
   (setq visible-bell t)                 ; 我讨厌emacs发出声音
   (setq column-number-mode t)
   (setq scroll-bar-mode-explicit t)
-  (set-scroll-bar-mode 'right)
+  (when (boundp 'set-scroll-bar-mode)
+    (set-scroll-bar-mode 'right)
+    )
+
   (setq show-paren-mode t)
   (put 'narrow-to-region 'disabled nil)
   (require 'uniquify)
