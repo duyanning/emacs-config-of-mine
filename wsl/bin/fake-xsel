@@ -7,15 +7,24 @@
 
 for i in "$@"
 do
-  case "$i" in
-  -o )
-    # for paste we will grab contents from powershell.exe
-    powershell.exe Get-Clipboard | sed 's/\r$//'
-    exit 0
-    ;;
-  -i )
-    # for copy we'll direct stdin to clip.exe
-    tee <&0 | clip.exe
-    exit 0
-  esac
+    case "$i" in
+        -o )
+            # for paste we will grab contents from powershell.exe
+            # powershell Get-clipboard总是在最后添加\r\n，用sed无法删除\n，因为sed是以行为单位的，\n被解释为$
+            # powershell.exe Get-Clipboard | sed 's/\r\n$//'
+            # 改用tr
+            # powershell.exe Get-Clipboard | tr -d '\r\n'
+            # 但这种做法会删除所有行的\r\n，而我只想删除最后的\r\n
+
+            # 算了，用专门的函数从win粘贴到wsl，删除所有行的\r即可。最后剩下那个\n在elisp中处理
+            powershell.exe Get-Clipboard | tr -d '\r'
+            exit 0
+            ;;
+        -i )
+            # for copy we'll direct stdin to clip.exe
+            # tee <&0 | clip.exe
+            # tee后的<&0貌似没必要
+            tee | clip.exe
+            exit 0
+    esac
 done

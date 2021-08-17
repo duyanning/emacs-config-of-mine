@@ -441,10 +441,17 @@
           (unless (string= (car kill-ring) xsel-output)
             xsel-output )))
       (setq interprogram-cut-function 'xsel-cut-function)
-      (setq interprogram-paste-function 'xsel-paste-function)
+      ;; (setq interprogram-paste-function 'xsel-paste-function) ; 问题多多，不如用个专门的函数负责从windows粘贴
+      (global-set-key (kbd "C-c C-y") 'paste-from-win-to-wsl)
       ))
   )
 
+
+(defun paste-from-win-to-wsl ()
+  (interactive)
+  (insert (shell-command-to-string "fake-xsel -b -o"))
+  (delete-backward-char 1)
+  )
 
 (defun load-term-settings ()
   (load-linux-common-settings))
