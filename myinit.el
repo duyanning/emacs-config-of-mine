@@ -984,12 +984,12 @@
 
 
 (defun configure-haskell-mode ()
-  (if (not (file-exists-p haskell-mode-path))
-      (message "no haskell-mode")
-    (add-to-load-path haskell-mode-path)
-    (autoload 'haskell-mode "haskell-site-file" "haskell mode." t)
+  (when (add-package 'haskell-mode haskell-mode-path)
+    (require 'haskell-interactive-mode)
+    (require 'haskell-process)
     (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
-    (add-hook 'haskell-mode-hook 'tweak-haskell-mode)))
+    (add-hook 'haskell-mode-hook 'tweak-haskell-mode))
+  )
 
 
 (defun configure-ntcmd-mode ()
@@ -1442,6 +1442,17 @@
 
 (defun tweak-haskell-mode ()
   (define-key haskell-mode-map "\C-c\C-c" 'comment-region)
+
+  (interactive-haskell-mode)
+
+
+  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+  ;(define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+  (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+  ;(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+  ;(define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
 
   (turn-on-haskell-doc-mode)
 
