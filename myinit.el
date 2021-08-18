@@ -994,8 +994,9 @@
   (when (add-package 'haskell-mode haskell-mode-path)
     (require 'haskell-interactive-mode)
     (require 'haskell-process)
+    (add-hook 'haskell-mode-hook 'tweak-haskell-mode)
     (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
-    (add-hook 'haskell-mode-hook 'tweak-haskell-mode))
+    )
   )
 
 
@@ -1448,25 +1449,26 @@
 
 
 (defun tweak-haskell-mode ()
-  (define-key haskell-mode-map "\C-c\C-c" 'comment-region)
-
+  (haskell-indentation-mode)
   (interactive-haskell-mode)
 
 
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
-  ;(define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+  ;;(define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
   (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
-  ;(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
-  ;(define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
+  ;;(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  ;;(define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+  ;;(define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
 
-  (turn-on-haskell-doc-mode)
 
-  ;; 三种不同的缩进模式，只能启用一种
-  ;;(turn-on-haskell-indentation)
-  (turn-on-haskell-indent)
-  ;;(turn-on-haskell-simple-indent)
+  (define-key haskell-mode-map "\C-c\C-c" 'comment-region)
+  ;; 光在haskell-mode-map中定义组合键没用，因为interactive-haskell-mode也会定义这些组合键，要改一起改
+  (define-key interactive-haskell-mode-map "\C-c\C-c" 'comment-region)
+
+  (haskell-doc-mode)
+
+  ;;(turn-on-haskell-indent)
 
 
   (subword-mode 1)  
@@ -1482,6 +1484,10 @@
                            (setq ws-mode nil)))
             nil
             t)
+
+    (when (add-package 'paredit paredit-path)
+      (paredit-mode +1)  
+    )
 
   )
 
