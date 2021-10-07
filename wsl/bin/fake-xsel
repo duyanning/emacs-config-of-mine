@@ -5,6 +5,9 @@
 # neovim will paste "xsel -o -b"
 # neovim will copy using "xsel --nodetach -i -b"
 
+# set PATH for powershell.exe and clip.exe
+PATH="/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Windows/System32:$PATH"
+
 for i in "$@"
 do
     case "$i" in
