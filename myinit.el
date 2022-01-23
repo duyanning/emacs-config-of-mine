@@ -297,6 +297,7 @@
   (configure-python-mode)
   (configure-emacs-lisp-mode)
   (configure-haskell-mode)
+  (configure-go-mode)
   (configure-bbyac)
   (configure-auto-complete)
   (configure-yasnippet)
@@ -998,6 +999,16 @@
     (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
     )
   )
+
+(defun configure-go-mode ()
+  (when (add-package 'go-mode "~/non-exist")
+    (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
+    (add-hook 'go-mode-hook
+              '(lambda ()
+                 (electric-pair-mode 1)))
+
+    )
+ )
 
 
 (defun configure-ntcmd-mode ()
